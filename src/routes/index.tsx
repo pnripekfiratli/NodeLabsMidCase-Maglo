@@ -4,7 +4,6 @@ import SignIn from "../modules/sign/signIn";
 import SignUp from "../modules/sign/signUp";
 import Dashboard from "../modules/dashboard/dashboard";
 import ProtectedRoute from "./ProtectedRoute";
-//import ProtectedRoute from "./ProtectedRoute";
 
 export default function routes() {
   return (

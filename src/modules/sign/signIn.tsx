@@ -35,6 +35,15 @@ export default function SignIn() {
     }
   }, [dataProfile]);
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (accessToken || refreshToken) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
   function validate() {
     const newErrors = { email: "", password: "" };
     let valid = true;
