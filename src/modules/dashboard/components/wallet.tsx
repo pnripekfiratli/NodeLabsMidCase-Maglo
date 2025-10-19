@@ -46,7 +46,7 @@ export default function Wallet() {
               item.color === "#000000"
                 ? "linear-gradient(90deg, #4A4A49 20%, #20201F 100%"
                 : "rgba(255, 255, 255, 0.25)",
-            width: index !== 0 ? "100%" : "90%",
+            width: index === 0 ? "100%" : "90%",
             maxWidth: index === 0 ? "354px" : "324px",
             borderRadius: "15px",
             backdropFilter: "blur(10px)",

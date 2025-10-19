@@ -45,6 +45,14 @@ export default function Dashboard() {
   const [shownPage, setShownPage] = useState<string>("Dashboard");
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1280);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 1280);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [window.innerWidth]);
+
   useEffect(() => {
     if (isSuccessLogout) {
       navigate("/sign-in");
@@ -148,16 +156,23 @@ export default function Dashboard() {
               </div>
             </div>
           </header>
-          <div className="grid grid-cols-12 gap-[39px]">
-            <div className="col-span-8 sm:col-span-12 p-4 rounded-lg ">
-              <div className=" flex flex-col gap-[30px]">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "2fr 1fr",
+              gap: "39px",
+              padding: "20px",
+            }}
+          >
+            <div className={`p-4 rounded-lg ${isMobile ? "max-w-[922px] min-w-[764px]" : "w-[full]"}`}>
+              <div className=" flex flex-col w-full gap-[30px]">
                 <TotalValueItems />
                 <WorkingCapital />
                 <RecentTransaction />
               </div>
             </div>
-            <div className="col-span-4 sm:col-span-12 p-4 rounded-lg ">
-              <div className="flex flex-col gap-[30px]">
+            <div className={`p-4 rounded-lg ${!isMobile && "w-[354px]"}`}>
+              <div className="flex flex-col w-full gap-[30px]">
                 <Wallet />
                 <ScheduledTransfers />
               </div>
