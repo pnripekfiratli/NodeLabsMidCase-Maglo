@@ -3,73 +3,72 @@ import logo from "../../assets/logos/maglo-logo.svg";
 import google from "../../assets/logos/googleLogo.svg";
 import line from "../../assets/sign/singLine.svg";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import SignPageSkeleton from "./pageSkeleton";
+import { useSignUp } from "../../hooks/useAuth";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { mutate, isSuccess, isPending } = useSignUp();
 
-  const [name, setName] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
-  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
-
-  const [loading, setLoading] = useState<boolean>(true);
+  const [nameInput, setName] = useState<string>();
+  const [emailInput, setEmailInput] = useState<string>();
+  const [passwordInput, setPasswordInput] = useState<string>();
+  const [errorsInput, setErrorsInput] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2500);
-    return () => clearTimeout(timer);
-  }, []);
+    if (isSuccess) {
+      navigate("/sing-in");
+    }
+  }, [isSuccess]);
 
   function validate() {
     const newErrors = { name: "", email: "", password: "" };
     let valid = true;
 
-    if (!name) {
+    if (!nameInput) {
       newErrors.name = "Full name is required";
       valid = false;
-    } else if (name.trim().length < 3) {
+    } else if (nameInput.trim().length < 3) {
       newErrors.name = "Please enter your full name";
       valid = false;
     }
 
-    if (!email) {
+    if (!emailInput) {
       newErrors.email = "Email is required";
       valid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput)) {
       newErrors.email = "Invalid email format";
       valid = false;
     }
 
-    if (!password) {
+    if (!passwordInput) {
       newErrors.password = "Password is required";
       valid = false;
-    } else if (password.length < 6) {
+    } else if (passwordInput.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
       valid = false;
     }
 
-    setErrors(newErrors);
+    setErrorsInput(newErrors);
     return valid;
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (validate()) {
-      toast.success("Account created successfully 🎉");
-      setName("");
-      setEmail("");
-      setPassword("");
-    } else {
-      toast.error("Please fix the errors and try again");
+    if (validate() && nameInput && emailInput && passwordInput) {
+      mutate({
+        fullName: nameInput,
+        email: emailInput,
+        password: passwordInput,
+      });
     }
   }
-  return loading ? (
-    <>
-      <SignPageSkeleton />
-    </>
-  ) : (
+
+  return (
     <div className="flex flex-row w-full h-screen overflow-x-hidden p-0 m-0 bg-white">
       <div className="flex flex-col justify-start w-1/2 h-screen p-0 m-0 bg-white">
         <div className="flex h-[30px] justify-start pt-[40px] pl-[135px]">
@@ -89,56 +88,64 @@ export default function SignUp() {
               Full Name
             </text>
             <input
-              value={name}
+              disabled={isPending}
+              value={nameInput}
               onChange={(e) => setName(e.target.value)}
               className={`border rounded-[10px] h-[48px] pl-[16px] text-[14px] placeholder:text-[#78778B] ${
-                errors.name
+                errorsInput.name
                   ? "border-[#e64037] focus:border-[#e64037]"
                   : "border-[#E4E4E7] focus:border-[#C8EE44]"
               }`}
               type="text"
               placeholder="Mahfuzul Nabil"
             />
-            {errors.name && (
-              <text className="text-[12px] text-[#e64037]">{errors.name}</text>
+            {errorsInput.name && (
+              <text className="text-[12px] text-[#e64037]">
+                {errorsInput.name}
+              </text>
             )}
             <text className="text-[14px] font-medium text-[#1B212D]">
               Email
             </text>
             <input
-              value={email}
+              disabled={isPending}
+              value={emailInput}
               className={`border rounded-[10px] h-[48px] pl-[16px] text-[14px] placeholder:text-[#78778B] focus:outline-none ${
-                errors.email
+                errorsInput.email
                   ? "border-[#e64037]"
                   : "border-[#E4E4E7] focus:border-[#C8EE44]"
               }`}
               type="email"
               placeholder="example@gmail.com"
-              onChange={(e) => setEmail(e.currentTarget.value)}
+              onChange={(e) => setEmailInput(e.currentTarget.value)}
             />
-            {errors.email && (
-              <text className="text-[12px] text-[#e64037]">{errors.email}</text>
+            {errorsInput.email && (
+              <text className="text-[12px] text-[#e64037]">
+                {errorsInput.email}
+              </text>
             )}
             <text className="text-[14px] font-medium text-[#1B212D]">
               Password
             </text>
             <input
-              value={password}
+              disabled={isPending}
+              value={passwordInput}
               className={`border rounded-[10px] h-[48px] pl-[16px] text-[14px] placeholder:text-[#78778B] focus:outline-none ${
-                errors.password
+                errorsInput.password
                   ? "border-[#e64037]"
                   : "border-[#E4E4E7] focus:border-[#C8EE44]"
               }`}
               type="password"
               placeholder="•••••••"
-              onChange={(e) => setPassword(e.currentTarget.value)}
+              onChange={(e) => setPasswordInput(e.currentTarget.value)}
             />
-            {errors.password && (
+            {errorsInput.password && (
               <text className="text-[12px] text-[#e64037]">
-                {errors.password}
+                {errorsInput.password}
               </text>
             )}
             <button
+              disabled={isPending}
               className="bg-[#C8EE44] border-transparent rounded-[10px] h-[48px] mt-[20px]"
               onClick={handleSubmit}
             >
