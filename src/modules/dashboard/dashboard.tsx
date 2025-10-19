@@ -18,6 +18,8 @@ import RecentTransaction from "./components/recentTransaction";
 import Wallet from "./components/wallet";
 import ScheduledTransfers from "./components/scheduledTransfers";
 import DashboardPageSkeleton from "./pageSkeleton";
+import { useNavigate } from "react-router-dom";
+import { useLogout } from "../../hooks/useAuth";
 
 interface SidebarItem {
   name: string;
@@ -33,14 +35,30 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 export default function Dashboard() {
-  const [shownPage, setShownPage] = useState<string>("Dashboard");
+  const navigate = useNavigate();
+  const {
+    mutate: mutateLogout,
+    isSuccess: isSuccessLogout,
+    isPending: isPendingLogout,
+  } = useLogout();
 
+  const [shownPage, setShownPage] = useState<string>("Dashboard");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2500);
-    return () => clearTimeout(timer);
-  }, []);
+    if (isSuccessLogout) {
+      navigate("/sign-in");
+    }
+  }, [isSuccessLogout]);
+
+  useEffect(() => {
+    setLoading(isPendingLogout);
+  }, [isPendingLogout]);
+
+  function handleLogout(e: React.FormEvent) {
+    e.preventDefault();
+    mutateLogout();
+  }
 
   return loading ? (
     <>
@@ -85,7 +103,10 @@ export default function Dashboard() {
               <img src={help} className="inline w-5 h-5 mr-3" />
               <span className="text-[#929EAE] font-semibold">Help</span>
             </div>
-            <div className="flex flex-row gap-[12px] cursor-pointer h-[48px] pl-[15px] items-center">
+            <div
+              className="flex flex-row gap-[12px] cursor-pointer h-[48px] pl-[15px] items-center cursor-pointer"
+              onClick={handleLogout}
+            >
               <img src={logout} className="inline w-5 h-5 mr-3" />
               <span className="text-[#929EAE] font-semibold">Logout</span>
             </div>

@@ -3,6 +3,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import SignIn from "../modules/sign/signIn";
 import SignUp from "../modules/sign/signUp";
 import Dashboard from "../modules/dashboard/dashboard";
+import ProtectedRoute from "./ProtectedRoute";
 //import ProtectedRoute from "./ProtectedRoute";
 
 export default function routes() {
@@ -11,15 +12,14 @@ export default function routes() {
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        {/*   <Route
+        <Route
           path="*"
           element={<ProtectedRoute children={<Dashboard />}></ProtectedRoute>}
         />
         <Route
           path="dashboard"
           element={<ProtectedRoute children={<Dashboard />}></ProtectedRoute>}
-        />*/}
+        />
       </Routes>
     </BrowserRouter>
   );
