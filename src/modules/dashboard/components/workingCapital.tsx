@@ -10,40 +10,21 @@ import {
 } from "recharts";
 
 import down from "../../../assets/icons/down.svg";
+import { useWorkingCapital } from "../../../hooks/useDashboard";
+import { useEffect, useState } from "react";
 
 export default function WorkingCapital() {
-  const data = [
-    {
-      month: "Ocak",
-      income: 65000,
-      expense: 42000,
-      net: 23000,
-    },
-    {
-      month: "Şubat",
-      income: 6500,
-      expense: 4000,
-      net: 1500,
-    },
-    {
-      month: "Mart",
-      income: 90000,
-      expense: 75000,
-      net: 25000,
-    },
-    {
-      month: "Nisan",
-      income: 65000,
-      expense: 4200,
-      net: 60800,
-    },
-    {
-      month: "Mayıs",
-      income: 75000,
-      expense: 32000,
-      net: 43000,
-    },
-  ];
+  const { data: capitalData } = useWorkingCapital();
+  const [chartData, setChartData] =
+    useState<
+      Array<{ month: string; income: number; expense: number; net: number }>
+    >();
+
+  useEffect(() => {
+    if (capitalData?.data.data) {
+      setChartData(capitalData.data.data)
+    }
+  }, [capitalData]);
 
   return (
     <div className="flex flex-col border border-[#F5F5F5] rounded-[10px] px-[25px] py-[15px] gap-[8px]">
@@ -58,13 +39,12 @@ export default function WorkingCapital() {
       </div>
       <div className="w-full">
         <ResponsiveContainer height={291}>
-          <LineChart data={data}>
+          <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               axisLine={false}
               dataKey="month"
               padding={{ left: 25, right: 25 }}
-              
             />
             <YAxis axisLine={false} padding={{ bottom: 25, top: 25 }} />
             <Tooltip isAnimationActive />
@@ -78,7 +58,7 @@ export default function WorkingCapital() {
                 top: -36,
                 right: 170,
                 fontSize: "12px",
-                fontWeight: 400
+                fontWeight: 400,
               }}
             />
             <Line

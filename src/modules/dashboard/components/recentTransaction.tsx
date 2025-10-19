@@ -1,52 +1,30 @@
+import { useEffect, useState } from "react";
 import right from "../../../assets/icons/right.svg";
+import { useRecentTransactions } from "../../../hooks/useDashboard";
+import { formatCurrency } from "../../../utils/formatCurrency";
 
 export default function RecentTransaction() {
-  const transactions = [
-    {
-      id: "trx_001",
-      name: "iPhone 13 Pro MAX",
-      business: "Apple Inc.",
-      image: "https://i.ibb.co/Apple-Logo.png",
-      type: "Mobile",
-      amount: -420.84,
-      currency: "TRY",
-      date: "2025-10-06T10:30:00.000Z",
-      status: "completed",
-    },
-    {
-      id: "trx_002",
-      name: "Netflix Subscription",
-      business: "Netflix",
-      image: "https://i.ibb.co/Netflix-Logo.png",
-      type: "Entertainment",
-      amount: -100,
-      currency: "TRY",
-      date: "2025-10-06T04:30:00.000Z",
-      status: "completed",
-    },
-    {
-      id: "trx_003",
-      name: "Figma Subscription",
-      business: "Figma Inc.",
-      image: "https://i.ibb.co/Figma-Logo.png",
-      type: "Software",
-      amount: -244.2,
-      currency: "TRY",
-      date: "2025-10-05T22:30:00.000Z",
-      status: "completed",
-    },
-    {
-      id: "trx_004",
-      name: "Monthly Salary",
-      business: "Tech Corp Ltd.",
-      image: "https://i.ibb.co/Company-Logo.png",
-      type: "Salary",
-      amount: 45000,
-      currency: "TRY",
-      date: "2025-10-05T16:30:00.000Z",
-      status: "completed",
-    },
-  ];
+  const { data: transactions } = useRecentTransactions();
+  const [transactionsData, setTransactionsData] = useState<
+    Array<{
+      id: string;
+      name: string;
+      business: string;
+      image: string;
+      type: string;
+      amount: number;
+      currency: string;
+      date: string;
+      status: string;
+    }>
+  >();
+
+  useEffect(() => {
+    if (transactions?.data.transactions) {
+      setTransactionsData(transactions.data.transactions);
+    }
+  }, [transactions]);
+
   return (
     <div className="flex flex-col border border-[#F5F5F5] rounded-[10px] px-[25px] py-[15px] gap-[8px]">
       <div className="w-full h-[22px] flex flex-row justify-between items-center">
@@ -85,7 +63,7 @@ export default function RecentTransaction() {
             </tr>
           </thead>
           <tbody>
-            {transactions.slice(0, 3).map((item, index: number) => (
+            {transactionsData?.slice(0, 3).map((item, index: number) => (
               <tr
                 key={index}
                 className="border-b border-[#F5F5F5] last:border-0"
@@ -106,7 +84,9 @@ export default function RecentTransaction() {
                   </div>
                 </td>
                 <td className="text-center">{item.type}</td>
-                <td className="text-center">{item.amount}</td>
+                <td className="text-center">
+                  {formatCurrency(item.amount, { currency: item.currency })}
+                </td>
                 <td className="text-center">
                   {new Date(item.date).toLocaleDateString("en-GB", {
                     day: "2-digit",
