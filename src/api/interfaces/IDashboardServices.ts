@@ -100,7 +100,7 @@ export interface ISheduledTransfers {
     success: boolean,
     message: string,
     data: {
-         transfers: Array<
+        transfers: Array<
             {
                 id: string,
                 name: string,

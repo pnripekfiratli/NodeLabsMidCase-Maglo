@@ -25,6 +25,15 @@ export default function SignUp() {
     }
   }, [isSuccess]);
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (accessToken || refreshToken) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
   function validate() {
     const newErrors = { name: "", email: "", password: "" };
     let valid = true;

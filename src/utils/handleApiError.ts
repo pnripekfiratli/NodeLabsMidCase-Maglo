@@ -7,10 +7,10 @@ export function handleApiError(error: any) {
     if (apiError.details && Array.isArray(apiError.details)) {
       const messages = apiError.details.map((d: any) => d.message).join("\n");
       toast.error(messages);
-    } 
+    }
     else if (apiError.message) {
       toast.error(apiError.message);
-    } 
+    }
     else {
       toast.error("An unexpected error occurred");
     }
