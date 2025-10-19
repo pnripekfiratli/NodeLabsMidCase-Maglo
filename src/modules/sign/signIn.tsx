@@ -67,12 +67,12 @@ export default function SignIn() {
   }
 
   return (
-    <div className="flex flex-row w-full h-screen overflow-x-hidden p-0 m-0 bg-white">
-      <div className="flex flex-col justify-start w-1/2 h-screen p-0 m-0 bg-white">
-        <div className="flex h-[30px] justify-start pt-[40px] pl-[135px]">
+    <div className="flex flex-row w-full h-screen overflow-x-hidden p-0 m-0 gap-[20px] bg-white">
+      <div className="flex flex-col justify-center items-center w-1/2 h-screen bg-white">
+        <div className="flex w-full max-w-[404px] h-[30px] justify-start pt-[40px]">
           <img src={logo} />
         </div>
-        <div className="flex flex-col max-w-[404px] h-full pt-[80px] justify-start align-middle pl-[135px]">
+        <div className="flex flex-col w-full max-w-[404px] h-full pt-[80px] justify-start align-middle">
           <div className="flex flex-col gap-[8px]">
             <text className="text-[30px] font-semibold ">Sign In</text>
             <text className="text-[16px] font-regular text-[#78778B] ">
@@ -156,7 +156,10 @@ export default function SignIn() {
         </div>
       </div>
       <div className="flex justify-end align-top w-1/2 h-screen p-0 m-0">
-        <img className="aspect-auto" src={pageImage} />
+        <img
+          className="w-full h-full object-cover md:object-contain sm:h-[300px] sm:object-cover transition-all duration-500"
+          src={pageImage}
+        />
       </div>
     </div>
   );
