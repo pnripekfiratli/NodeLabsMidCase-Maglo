@@ -1,18 +1,28 @@
+import { useEffect, useState } from "react";
 import right from "../../../assets/icons/right.svg";
+import { useScheduledTransfers } from "../../../hooks/useDashboard";
+import { formatCurrency } from "../../../utils/formatCurrency";
 
 export default function ScheduledTransfers() {
-  const transfers = [
-    {
-      id: "sch_001",
-      name: "Saleh Ahmed",
-      image:
-        "https://ui-avatars.com/api/?name=Saleh+Ahmed&background=random&size=100",
-      date: "2022-04-28T11:00:00Z",
-      amount: -435,
-      currency: "$",
-      status: "scheduled",
-    },
-  ];
+  const { data: transfers } = useScheduledTransfers();
+
+  const [scheduledTransfers, setScheduledTransfers] = useState<
+    Array<{
+      id: string;
+      name: string;
+      image: string;
+      date: string;
+      amount: number;
+      currency: string;
+      status: string;
+    }>
+  >();
+
+  useEffect(() => {
+    if (transfers?.data.transfers) {
+      setScheduledTransfers(transfers.data.transfers);
+    }
+  }, [transfers]);
 
   return (
     <div>
@@ -27,9 +37,12 @@ export default function ScheduledTransfers() {
           <img src={right} />
         </div>
       </div>
-      <div className="flex flex-col justify-between">
-        {transfers.map((item, index) => (
-          <div key={index} className="flex flex-row w-full justify-between items-center">
+      <div className="flex flex-col justify-between gap-[12px]">
+        {scheduledTransfers?.map((item, index) => (
+          <div
+            key={index}
+            className="flex flex-row w-full justify-between items-center"
+          >
             <div className="gap-[12px] flex flex-row items-center">
               <div className="w-[36px] h-[36px] rounded-full overflow-hidden">
                 <img
@@ -58,7 +71,9 @@ export default function ScheduledTransfers() {
                 </text>
               </div>
             </div>
-            <text className="text-[18px] font-semibold text-[#000000]">{item.amount}</text>
+            <text className="text-[18px] font-semibold text-[#000000]">
+              {formatCurrency(item.amount, {currency: item.currency})}
+            </text>
           </div>
         ))}
       </div>
