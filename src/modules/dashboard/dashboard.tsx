@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import logo from "../../assets/maglo-logo.svg";
+import logo from "../../assets/logos/maglo-logo.svg";
 import home from "../../assets/icons/home.svg";
 import transaction from "../../assets/icons/transaction.svg";
 import invoice from "../../assets/icons/invoice.svg";
@@ -11,7 +11,13 @@ import logout from "../../assets/icons/logout.svg";
 import search from "../../assets/icons/search.svg";
 import notification from "../../assets/icons/notification.svg";
 import dropdown from "../../assets/icons/dropdown.svg";
-import user from "../../assets/person.png";
+import user from "../../assets/dashboard/person.png";
+import TotalValueItems from "./components/totalValueItems";
+import WorkingCapital from "./components/workingCapital";
+import RecentTransaction from "./components/recentTransaction";
+import Wallet from "./components/wallet";
+import ScheduledTransfers from "./components/scheduledTransfers";
+import DashboardPageSkeleton from "./pageSkeleton";
 
 interface SidebarItem {
   name: string;
@@ -29,10 +35,20 @@ const sidebarItems: SidebarItem[] = [
 export default function Dashboard() {
   const [shownPage, setShownPage] = useState<string>("Dashboard");
 
-  return (
-    <div className="flex justify-center min-h-screen bg-gray-50">
-      <div className="grid grid-cols-[250px_1fr] max-w-[1440px] w-full min-h-screen">
-        {/* Sidebar */}
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return loading ? (
+    <>
+      <DashboardPageSkeleton />
+    </>
+  ) : (
+    <div className="h-screen bg-gray-50">
+      <div className="grid grid-cols-[250px_1fr] w-full min-h-screen">
         <aside className="bg-[#FAFAFA] p-[30px_25px_100px] flex flex-col justify-between">
           <div>
             <div className="flex h-[30px] justify-start mb-[40px]">
@@ -75,11 +91,8 @@ export default function Dashboard() {
             </div>
           </nav>
         </aside>
-
-        {/* Main Content */}
-        <main className="grid grid-cols-12 grid-rows-[auto_1fr] pl-[38px] pt-[30px] pr-[30px] pb-[30px] bg-white">
-          {/* Üst Bar */}
-          <header className="col-span-12 flex w-full h-[48px] items-center justify-between shadow px-6">
+        <main className="pl-[38px] pt-[30px] pr-[30px] pb-[30px] bg-white">
+          <header className="flex w-full h-[48px] items-center justify-between shadow px-6 mb-[24px]">
             <div className="flex items-center">
               <h2 className="text-[25px] text-[#1B212D] font-semibold">
                 Dashboard
@@ -114,18 +127,19 @@ export default function Dashboard() {
               </div>
             </div>
           </header>
-
-          {/* Ana içerik */}
-          <div className="col-span-12 w-full gap-[39px]">
-            <div className=" grid grid-cols-12">
-              {/* Sol blok */}
-              <div className="col-span-8 sm:col-span-12 bg-gray-100 p-4 rounded-lg">
-                sol taraf
+          <div className="grid grid-cols-12 gap-[39px]">
+            <div className="col-span-8 sm:col-span-12 p-4 rounded-lg ">
+              <div className=" flex flex-col gap-[30px]">
+                <TotalValueItems />
+                <WorkingCapital />
+                <RecentTransaction />
               </div>
-              {/* Sağ blok */}
-              <div className="col-span-4 sm:col-span-12  p-4 rounded-lg">
-                sağ taraf
-              </div>{" "}
+            </div>
+            <div className="col-span-4 sm:col-span-12 p-4 rounded-lg ">
+              <div className="flex flex-col gap-[30px]">
+                <Wallet />
+                <ScheduledTransfers />
+              </div>
             </div>
           </div>
         </main>
